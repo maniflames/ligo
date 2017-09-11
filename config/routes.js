@@ -34,7 +34,10 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
+
+  '/test': 'ChatroomsController.test'
+
 
   /***************************************************************************
   *                                                                          *
@@ -44,6 +47,6 @@ module.exports.routes = {
   * is matched against Sails route blueprints. See `config/blueprints.js`    *
   * for configuration options and examples.                                  *
   *                                                                          *
-  ***************************************************************************/
+  ************** *************************************************************/
 
 };
