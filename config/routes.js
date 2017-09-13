@@ -36,7 +36,7 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  '/test': 'ChatroomsController.test'
+  '/register': 'UserController.test'
 
 
   /***************************************************************************
