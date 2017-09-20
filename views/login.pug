@@ -1,0 +1,19 @@
+extends page-layout.pug 
+block content
+    h1.
+      Log in
+
+    form(method='POST')
+      input(name="username", placeholder="username")
+      br
+      input(name="password", placeholder="password", type="password")
+      br
+      input(type="submit")
+
+        //- TODO: find the sails way to do a link
+    div
+      p not a member yet? 
+        a(
+        href 
+          = sails.getUrlFor('UserController.register')
+        ) sign up

@@ -1,0 +1,19 @@
+extends page-layout.pug 
+block content
+  h1.
+    Sign up  
+  form(method='POST')
+    input(name="username", placeholder="username")
+    br
+    input(name="password", placeholder="password", type="password")
+    br
+    input(name="repeat", placeholder="repeat password", type="password")
+    br
+    input(type="submit")
+      
+  div
+    p already a member? 
+       a(
+       href 
+         = sails.getUrlFor('UserController.login') 
+        ) login
