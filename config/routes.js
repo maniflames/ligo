@@ -32,12 +32,6 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  },
-
-  '/register': 'UserController.test'
-
 
   /***************************************************************************
   *                                                                          *
@@ -49,4 +43,25 @@ module.exports.routes = {
   *                                                                          *
   ************** *************************************************************/
 
+
+  '/': {
+    view: 'register'
+  },
+
+  'GET /login': {
+    view: 'login'
+  },
+
+  'POST /login': 'UserController.login',
+
+  'GET /register': {
+    view: 'register'
+  },
+
+  'POST /register': 'UserController.register',
+
+  '/dashboard': [
+    { policy: 'sessionAuth' },
+    { view: 'dashboard' }
+  ]
 };

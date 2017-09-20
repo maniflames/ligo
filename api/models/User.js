@@ -17,95 +17,24 @@ module.exports = {
 
   attributes: {
     email: {
-      type: 'string'
+      type: 'string',
+      unique: true
     },
 
-    name: {
-      type: 'string'
+    username: {
+      type: 'string',
+      required: true,
+      unique: true
     },
 
     password: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
 
     joinedChatrooms: {
       type: 'array'
     }
   },
-
-  /**
-   * User.register
-   * Put new users in the database
-   * @param  {[type]} req [an object containing user info]
-   * @param  {[type]} res [a response object]
-   * @return {[type]} res [a response containing the status of the query result]
-   */
-  register: function(req, res){
-
-    bcrypt.hash(req.password, saltRounds, function(err, hash) {
-      if(err){
-        return res.serverError(err);
-      }
-
-      req.password = hash;
-
-      User.create(req).exec(function (err, newUser){
-        if(err){
-          return res.badRequest(err);
-        }
-
-        return res.created(newUser);
-
-      });
-
-    });
-  },
-
-/**
- * User.retrieve
- * Get users from the database
- * @param  {[type]} req [an object containing user info]
- * @param  {[type]} res [a response object]
- * @return {[type]} res [a response containing the json from the db]
- */
-  retrieve: function(req, res){
-    User.find(req).exec(function (err, result){
-      if(err){
-        return res.badRequest(err);
-      }
-
-      return res.json(result);
-
-    });
-  },
-
-/**
- * User.change
- * Update an existing user in the database
- * @param  {[type]} find   [an object containing user data of the user that needs to be found]
- * @param  {[type]} update [an objetct containing the new user data]
- * @param  {[type]} res [a response object]
- * @return {[type]} res [a response containing the status of the query result]
- */
-  change: function(find, update, res){
-    User.update(find, update).exec(function (err, result){
-      if(err){
-        return res.badRequest(err);
-      }
-
-      return res.ok();
-    });
-  }
-
-  //retrieveJoinedChatrooms:
-  //use naitive $lookup and I guess unwind
-
-
-  //TODO: learn about sessions to complete the two below
-  //Login
-
-  //Logout
-
-
 
 };
