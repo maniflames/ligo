@@ -2,5 +2,10 @@ doctype
 html
   head
   body
-    h1.
-      Welcome
+    h1 Welcome
+    a(
+    href 
+      = sails.getUrlFor('UserController.settings') 
+     ) settings
+     
+     

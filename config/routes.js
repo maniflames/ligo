@@ -44,9 +44,9 @@ module.exports.routes = {
   ************** *************************************************************/
 
 
-  '/': {
-    view: 'register'
-  },
+  '/': 'UserController.index',
+
+  '/dashboard': 'UserController.index',
 
   'GET /login': {
     view: 'login'
@@ -60,8 +60,8 @@ module.exports.routes = {
 
   'POST /register': 'UserController.register',
 
-  '/dashboard': [
-    { policy: 'sessionAuth' },
-    { view: 'dashboard' }
-  ]
+  'GET /settings': 'UserController.settings',
+
+  'GET /:username': 'UserController.detail'
+
 };
