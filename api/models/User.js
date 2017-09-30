@@ -7,13 +7,11 @@
 
 module.exports = {
 
-  autoCreatedAt: false,
-  autoUpdatedAt: false,
-
   attributes: {
-    email: {
-      type: 'string',
-      unique: true
+    id: {
+      type: 'integer',
+      unique: true,
+      primaryKey: true
     },
 
     username: {

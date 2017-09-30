@@ -4,13 +4,10 @@ block content
       Log in
 
     form(method='POST')
-      input(name="username", placeholder="username")
-      br
-      input(name="password", placeholder="password", type="password")
-      br
-      input(type="submit")
+      +formField('text', 'username', 'username')
+      +formField('password', 'password', 'password')
+      +formField('submit')
 
-        //- TODO: find the sails way to do a link
     div
       p not a member yet? 
         a(
