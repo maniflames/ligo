@@ -19,18 +19,18 @@ module.exports = {
 		// })
 
 
-		Chatroom.find({
-			members: "59be874b4b608c4c60a36b75"
-		})
-		.exec(function(err, chatrooms){
-			if(err){
-				sails.error.log(err);
-				return res.serverError();
-			}
-
-			sails.log.debug(chatrooms);
-			return res.view('dashboard');
-		})
+		// Chatroom.find({
+		// 	members: "59be874b4b608c4c60a36b75"
+		// })
+		// .exec(function(err, chatrooms){
+		// 	if(err){
+		// 		sails.error.log(err);
+		// 		return res.serverError();
+		// 	}
+		//
+		// 	sails.log.debug(chatrooms);
+		// 	return res.view('dashboard');
+		// })
 
 	},
 

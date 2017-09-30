@@ -5,15 +5,10 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 module.exports = {
 
-  connection:'MongoDB',
   autoCreatedAt: false,
   autoUpdatedAt: false,
-  schema: true,
 
   attributes: {
     email: {
@@ -32,44 +27,9 @@ module.exports = {
       required: true
     },
 
-    joinedChatrooms: {
-      type: 'array'
+    chats: {
+      collection: 'chatroom',
+      via: 'members'
     }
   },
-
-  listChats: function() {
-    return new Promise(function(resolve, reject){
-        User.native(function(err, collection){
-
-          collection.aggregate([
-            {
-              "$lookup": {
-                "from":"chatroom",
-                "localField": "joinedChatrooms",
-                "foreignField": "_id",
-                "as": "Chat" }
-              },
-              {
-                "$project": {
-                  "Chat.name": 1,
-                  "Chat.members": 1
-                }
-              },
-              {
-                "$unwind": "$Chat"
-              }
-            ],
-
-            function(err, results){
-
-              if(err){
-                reject(err);
-              }
-
-              sails.log.debug(results);
-              resolve(results);
-            });
-          });
-      });
-    }
-  }
+}

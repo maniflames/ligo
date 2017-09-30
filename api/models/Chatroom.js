@@ -6,10 +6,9 @@
  */
 
 module.exports = {
-  connection:'MongoDB',
+
   autoCreatedAt: false,
   autoUpdatedAt: false,
-  schema: true,
 
   attributes: {
     name: {
@@ -17,7 +16,8 @@ module.exports = {
     },
 
     members: {
-      type: 'array'
+      collection: 'user',
+      via: 'chats'
     }
   },
 
