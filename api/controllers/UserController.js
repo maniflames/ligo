@@ -9,36 +9,28 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
 	index: function(req, res){
-		//Find all chatrooms that have member 'current'
-		sails.log.debug("Activated the index action");
 
-		//MongoDB JOIN !!!!!
-		//Ask antwan aboutsails populate
-		User.native(function(err, collection){
-			sails.log.debug("performing a naitive query");
-			const test = collection.aggregate([{ "$lookup": {
-				"from":"chatroom",
-				"localField": "joinedChatrooms",
-				"foreignField": "_id",
-				"as": "Chat" }
-
-		}], function(err, results){
-
-			sails.log.debug("done performing naitive query");
+		// User.listChats()
+		// .then(function(results){
+		// 	return res.view('dashboard');
+		// })
+		// .catch(function(err){
+		// 	return res.serverError();
+		// })
 
 
+		Chatroom.find({
+			members: "59be874b4b608c4c60a36b75"
+		})
+		.exec(function(err, chatrooms){
 			if(err){
-				sails.log.error("Something went wrong");
-				sails.log.error(err);
+				sails.error.log(err);
 				return res.serverError();
 			}
 
-			sails.log.debug("it worked");
-			sails.log.debug(results);
+			sails.log.debug(chatrooms);
 			return res.view('dashboard');
-
-		});
-		});
+		})
 
 	},
 
