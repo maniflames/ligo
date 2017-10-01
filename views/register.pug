@@ -11,7 +11,4 @@ block content
       
   div
     p already a member? 
-       a(
-       href 
-         = sails.getUrlFor('UserController.login') 
-        ) login
+       +a(sails.getUrlFor('UserController.login'), 'login')

@@ -5,15 +5,26 @@ html
       Ligo | Page
     //- #{title}
     block css
+      // STYLES
+      link(rel="stylesheet", href="/styles/material-design-lite/material.min.css")
+      link(rel="stylesheet", href="/styles/importer.css")
+      link(rel="stylesheet", href="/styles/style.css")
+      // STYLES END
       //- Do the stuff with the grunt task to do it the sails way (tasks/config/sails-linker.js)
-      link(rel="stylesheet", href= '/styles/style.css')
+      //- link(rel="stylesheet", href= '/styles/style.css')
       
   body
     header
-    include partials/form.pug  
+    include partials/form.pug 
+    include partials/hyperlink.pug 
     block content
       
     footer
       
     block scripts
+      // SCRIPTS
+      script(src="/js/dependencies/sails.io.js")
+      script(src="/styles/material-design-lite/material.min.js")
+      script(src="/js/login-validation.js")
+      // SCRIPTS END
     

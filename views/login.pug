@@ -6,11 +6,8 @@ block content
     form(method='POST')
       +formField('text', 'username', 'username')
       +formField('password', 'password', 'password')
-      +formField('submit')
+      +formField('submit', 'login')(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
 
     div
       p not a member yet? 
-        a(
-        href 
-          = sails.getUrlFor('UserController.register')
-        ) sign up
+        +a( sails.getUrlFor('UserController.register'), 'sign up')

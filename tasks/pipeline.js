@@ -17,7 +17,8 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
-  'styles/**/*.css'
+  'styles/material-design-lite/material.min.css',
+  'styles/*.css'
 ];
 
 
@@ -30,6 +31,7 @@ var jsFilesToInject = [
 
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',
+  'styles/material-design-lite/material.min.js',
 
   // All of the rest of your client-side js files
   // will be injected here in no particular order.
@@ -83,5 +85,3 @@ module.exports.templateFilesToInject = templateFilesToInject.map(function(tplPat
   }
   return require('path').join('assets/',tplPath);
 });
-
-

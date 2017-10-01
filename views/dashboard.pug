@@ -1,16 +1,9 @@
-doctype
-html
-  head
-  body
-    h1 Welcome
-    a(
-    href 
-      = sails.getUrlFor('UserController.settings') 
-     ) settings
-     
-     a(
-     href 
-       = sails.getUrlFor('UserController.logout') 
-      ) logout
-     
+extends page-layout.pug 
+block content
+  h1 Welcome
+  +a(sails.getUrlFor('UserController.settings'), 'settings')
+  |
+  |
+  +a(sails.getUrlFor('UserController.logout'), 'logout')
+   
      
