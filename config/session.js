@@ -12,6 +12,8 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.session.html
  */
 
+const MySQLSessionStore = require('express-mysql-session');
+
 module.exports.session = {
 
   /***************************************************************************
@@ -31,9 +33,11 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // cookie: {
-  //   maxAge: 24 * 60 * 60 * 1000
-  // },
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000
+  },
+
+  key: 'sid',
 
   /***************************************************************************
   *                                                                          *
@@ -57,9 +61,9 @@ module.exports.session = {
 
   // host: 'localhost',
   // port: 6379,
-  // ttl: <redis session TTL in seconds>,
+  // //ttl: <redis session TTL in seconds>,
   // db: 0,
-  // pass: <redis auth password>,
+  // //pass: <redis auth password>,
   // prefix: 'sess:',
 
 
@@ -74,8 +78,8 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // adapter: 'mongo',
-  // url: 'mongodb://user:password@localhost:27017/dbname', // user, password and port optional
+  adapter: 'mongo',
+  url: 'mongodb://localhost:27017/ligo', // user, password and port optional
 
   /***************************************************************************
   *                                                                          *
@@ -89,12 +93,12 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // collection: 'sessions',
-  // stringify: true,
+  collection: 'sessions',
+  stringify: true,
   // mongoOptions: {
   //   server: {
   //     ssl: true
   //   }
-  // }
+
 
 };

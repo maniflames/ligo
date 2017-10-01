@@ -7,9 +7,7 @@
 
 module.exports = {
 	index: function(req, res){
-
 		return res.view('dashboard');
-
 	},
 
 	register: function(req, res){
@@ -19,7 +17,7 @@ module.exports = {
 			})
 			.catch(function(err){
 				sails.log.error(err);
-				return res.view(err);
+				return res.view('error');
 			})
 	},
 
@@ -30,8 +28,17 @@ module.exports = {
 			})
 			.catch(function(err){
 				sails.log.error(err);
-				return res.view(err);
+				return res.view('error');
 			})
+	},
+
+	logout: function(req, res){
+
+		req.session.userId = undefined;
+		req.session.authenticated = false;
+		//Remove session from db
+
+		return res.redirect('login');
 	},
 
 	settings: function(req, res){
@@ -42,11 +49,13 @@ module.exports = {
 	detail: function(req, res){
 		User.findOne({username: req.params.username}).exec(function(err, foundUser){
 			if(err){
+				sails.log.error(err)
 				return res.view('error');
 			}
 
 			if(foundUser == undefined || foundUser == ''){
 				//Change his into a 404 once I've made it
+				sails.log.error('Not a user');
 				return res.view('error');
 			}
 

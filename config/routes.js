@@ -62,6 +62,9 @@ module.exports.routes = {
 
   'GET /settings': 'UserController.settings',
 
-  'GET /:username': 'UserController.detail'
+  'GET /user/:username': 'UserController.detail',
+
+  '/logout': 'UserController.logout'
+
 
 };

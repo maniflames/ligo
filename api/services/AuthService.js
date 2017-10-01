@@ -12,9 +12,10 @@ module.exports = {
 
         if(user != undefined){
           sails.log.debug('found a user');
-          return res.view('register', {
+          return reject('register', {
             error: 'username taken'
           });
+
         }
 
         bcrypt.hash(req.body.password, 10, function(err, hash) {
@@ -43,21 +44,24 @@ module.exports = {
     return new Promise(function(resolve, reject){
       User.findOne({'username': req.body.username }).exec(function(err, user){
 				if(err){
+          sails.log.error(err);
 					return reject(err);
 				}
 
         bcrypt.compare(req.body.password, user.password, function(err, loggedInUser){
 					if(err){
+            sails.log.error(err);
 						return reject(err);
 					}
 
-          if(loggedInUser == undefined){
+          if(loggedInUser.length < 1){
             return reject({error: 'Username does\'t exist'})
           }
 
           if(loggedInUser){
-						req.session.userId = user.id;
+            req.session.userId = user.id;
 						req.session.authenticated = true;
+
             return resolve(loggedInUser);
           }
 
@@ -65,6 +69,6 @@ module.exports = {
         });
       });
     })
-  }
+  },
 
 }
