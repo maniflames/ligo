@@ -43,11 +43,28 @@ module.exports.routes = {
   *                                                                          *
   ************** *************************************************************/
 
-
+  //Root path
   '/': 'UserController.index',
 
+  //Dashboard related Routes
   '/dashboard': 'UserController.index',
 
+  'GET /chat': {
+    view: 'addChatroom'
+  },
+
+  'POST /chat': 'ChatroomController.add',
+
+  //Chatroom and chat related routes
+
+  'GET /chat/:chatroom': 'ChatroomController.show',
+
+  'GET /chat/:chatroom/settings': 'ChatroomController.settings',
+
+  'POST /chat/:chatroom/leave': 'ChatroomController.leave',
+
+
+  //Authentication Routes
   'GET /login': {
     view: 'login'
   },

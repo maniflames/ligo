@@ -7,7 +7,15 @@
 
 module.exports = {
 	index: function(req, res){
-		return res.view('dashboard');
+		User.findOne({id: req.session.userId})
+		.populate('chats')
+		.exec(function(err, userAndChats){
+			if(err){
+				sails.log.error(err);
+				return res.view(err);
+			}
+			return res.view('dashboard', {chats: userAndChats.chats});
+		})
 	},
 
 	register: function(req, res){
@@ -43,7 +51,7 @@ module.exports = {
 
 	settings: function(req, res){
 		sails.log.debug(req.session.userId);
-		return res.view('settings', {id: req.session.userId});
+		return res.view('userSettings', {id: req.session.userId});
 	},
 
 	detail: function(req, res){
@@ -59,7 +67,7 @@ module.exports = {
 				return res.view('error');
 			}
 
-				return res.view('user-detail', {user: foundUser});
+				return res.view('userDetail', {user: foundUser});
 		});
 	}
 };

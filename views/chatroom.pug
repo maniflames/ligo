@@ -1,0 +1,5 @@
+extends page-layout
+block content
+  h1 #{chat.name}
+  - var settingsUrl = sails.getUrlFor('ChatroomController.settings')
+  +a(settingsUrl.replace(':chatroom', chat.id), 'settings')

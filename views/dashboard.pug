@@ -5,5 +5,14 @@ block content
   |
   |
   +a(sails.getUrlFor('UserController.logout'), 'logout')
+  |
+  |
+  +a(sails.getUrlFor('ChatroomController.add'), 'New Chat')
    
      
+  div.chatsContainer
+    if chats
+      - var chatUrl = sails.getUrlFor('ChatroomController.show')
+      each chat in chats
+        a(href=chatUrl.replace(':chatroom', chat.id)) 
+          h3 #{chat.name}

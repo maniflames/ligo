@@ -60,5 +60,9 @@ module.exports.policies = {
       '*': ['sessionAuth'],
       login: true,
       register: true
+    },
+
+    ChatroomController: {
+      '*': ['sessionAuth']
     }
 };

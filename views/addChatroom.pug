@@ -1,0 +1,7 @@
+extends page-layout
+block content
+  h1 new Chat
+  form(method="POST")
+    +formField('text', 'chatname', 'insert chat name')
+    +formField('submit')(value='create', class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
+    
