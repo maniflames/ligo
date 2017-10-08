@@ -44,7 +44,6 @@ module.exports = {
 
 		req.session.userId = undefined;
 		req.session.authenticated = false;
-		//Remove session from db
 
 		return res.redirect('login');
 	},
@@ -62,7 +61,7 @@ module.exports = {
 			}
 
 			if(foundUser == undefined || foundUser == ''){
-				//Change his into a 404 once I've made it
+				//LIGO: Change his into a 404 once I've made it
 				sails.log.error('Not a user');
 				return res.view('error');
 			}

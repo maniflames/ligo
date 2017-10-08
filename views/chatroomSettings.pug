@@ -1,10 +1,16 @@
 extends page-layout.pug 
 block content
   h1 Settings
-    h3 This is chat: #{chat.id}
     
   - var leaveUrl = sails.getUrlFor('ChatroomController.leave')
   
 
   form(method="POST", action = leaveUrl.replace(":chatroom", chat.id))
     +formField('submit')(value='leave')
+
+  ul 
+    h5 Members
+    each member in chat.members
+      li #{member.username}
+    li
+      button(id="addChatMember" type="button") add

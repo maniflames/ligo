@@ -42,6 +42,7 @@ module.exports = {
 
   settings: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
+    .populate('members')
     .exec(function(err, foundChat){
       if(err){
         sails.log.error(err);
@@ -53,28 +54,41 @@ module.exports = {
     })
 	},
 
+//LIGO: !! functionality preferably in ONE Query, send the amount of chatroom members in request
+//Smartest thing to do would be to add a policy
   leave: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
+    .populate('members')
     .exec(function(err, foundChat){
       if(err){
         sails.log.error(err);
         return res.view('error');
       }
 
-      foundChat.members.remove(req.session.userId);
-      foundChat.save(function(err){
-        if(err){
-          sails.log.error(err);
-          return res.view('error');
-        }
+      if(foundChat.members > 1){
+        foundChat.members.remove(req.session.userId);
+        foundChat.save(function(err){
+          if(err){
+            sails.log.error(err);
+            return res.view('error');
+          }
 
-        return res.redirect('/');
+          return res.redirect('/');
 
-      });
+        });
+
+      } else {
+
+        Chatroom.destroy({id: req.params.chatroom})
+        .exec(function(err, destroyedChat){
+            if(err){
+                sails.log.error(err);
+                return res.view('error');
+            }
+
+            return res.redirect('/');
+        })
+      }
     })
   },
-
-  remove: function(req, res){
-    //remove chatroom
-  }
 };

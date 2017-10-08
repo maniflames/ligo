@@ -15,7 +15,8 @@ html
     header
     include partials/form.pug 
     include partials/hyperlink.pug 
-    block content
+    div#content
+      block content
       
     footer
       
@@ -23,6 +24,6 @@ html
       // SCRIPTS
       script(src="/js/dependencies/sails.io.js")
       script(src="/styles/material-design-lite/material.min.js")
-      script(src="/js/login-validation.js")
+      script(src="/js/chatroomSettings.js")
       // SCRIPTS END
     
