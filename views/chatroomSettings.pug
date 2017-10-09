@@ -1,16 +1,43 @@
 extends page-layout.pug 
 block content
-  h1 Settings
-    
-  - var leaveUrl = sails.getUrlFor('ChatroomController.leave')
+  - var addMemberUrl = sails.getUrlFor('ChatroomController.addChatMember')
+  - var leaveURL = sails.getUrlFor('ChatroomController.leave')
+  - var originURL = sails.getUrlFor('ChatroomController.settings')
+  - var removeURL = sails.getUrlFor('ChatroomController.removeChatMember')
+  - var blockURL = sails.getUrlFor('ChatroomController.blockChatMember')
   
+  div#origin(style="display:none;" data-url=originURL.replace(":chatroom", chat.id))
+  h1 Settings
 
-  form(method="POST", action = leaveUrl.replace(":chatroom", chat.id))
-    +formField('submit')(value='leave')
+    ul 
+      h5 Members
+      each member in chat.members
+        li #{member.username}
+          button.removeChatMember(
+            data-action = removeURL.replace(":chatroom", chat.id),
+            data-username = member.username
+            ) X
+          button.blockChatMember(
+              data-action = blockURL.replace(":chatroom", chat.id),
+              data-username = member.username
+            ) block
+          
+      li
+        +formField('text')(id='addChatMemberUsername', placeholder='username')
+      li
+        button#addChatMember(
+            data-action = addMemberUrl.replace(":chatroom", chat.id),
+          ) add
+          
+    ul
+      h5 blocked users
+      each user in chat.blocked
+        li #{user.username}
+        //LIGO: write unblock function
+       
+  button#leave(data-action = leaveURL.replace(":chatroom", chat.id)) leave
 
-  ul 
-    h5 Members
-    each member in chat.members
-      li #{member.username}
-    li
-      button(id="addChatMember" type="button") add
+block append scripts
+  script(src="/js/chatroomSettings.js",
+    autoConnect="false"
+  )

@@ -56,6 +56,7 @@ module.exports = {
 
 //LIGO: !! functionality preferably in ONE Query, send the amount of chatroom members in request
 //Smartest thing to do would be to add a policy
+//Look into sum and stuff it could really slim this thing.
   leave: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
     .populate('members')
@@ -65,7 +66,14 @@ module.exports = {
         return res.view('error');
       }
 
-      if(foundChat.members > 1){
+      sails.log.debug(foundChat);
+      sails.log.debug(req.params.chatroom);
+
+      if(foundChat === undefined){
+          return res.view('error');
+      }
+
+      if(foundChat.members.length > 1){
         foundChat.members.remove(req.session.userId);
         foundChat.save(function(err){
           if(err){
@@ -73,7 +81,7 @@ module.exports = {
             return res.view('error');
           }
 
-          return res.redirect('/');
+          return res.json({"location":"/"});
 
         });
 
@@ -86,9 +94,91 @@ module.exports = {
                 return res.view('error');
             }
 
-            return res.redirect('/');
+            return res.json({"location":"/"});
         })
       }
     })
   },
-};
+
+  //LIGO: write chatMember service
+
+  addChatMember: function(req, res){
+
+      User.findOne({username: req.body.username})
+      .populate('chats')
+      .exec(function(err, foundUser){
+          if(err){
+              sails.log.error(err);
+              return res.view('error');
+          }
+
+          if(foundUser === undefined){
+              return res.redirect('/');
+          }
+
+          foundUser.chats.add(req.params.chatroom);
+          foundUser.save(function(err){
+              if(err){
+                  sails.log.error(err);
+                  return res.view('error');
+              }
+          })
+
+           return res.json({"location": req.body.origin});
+
+      })
+  },
+
+  removeChatMember:  function(req, res){
+
+      User.findOne({username: req.body.username})
+      .populate('chats')
+      .exec(function(err, foundUser){
+          if(err){
+              sails.log.error(err);
+              return res.json({"location":"/"});
+          }
+
+          if(foundUser === undefined){
+              return res.json({"location":"/"});
+          }
+
+          foundUser.chats.remove(req.params.chatroom);
+          foundUser.save(function(err){
+              if(err){
+                  sails.log.error(err);
+                  return res.json({"location":"/"});
+              }
+          });
+
+         return res.json({"location": req.body.origin});
+     })
+    },
+
+    blockChatMember: function(req, res){
+
+        User.findOne({username: req.body.username})
+        .populate('chats')
+        .exec(function(err, foundUser){
+            if(err){
+                sails.log.error(err);
+                return res.json({"location":"/"});
+            }
+
+            if(foundUser === undefined){
+                return res.json({"location":"/"});
+            }
+
+            foundUser.chats.remove(req.params.chatroom);
+            foundUser.bannedFrom.add(req.params.chatroom);
+            foundUser.save(function(err){
+                if(err){
+                    sails.log.error(err);
+                    return res.json({"location":"/"});
+                }
+            });
+
+           return res.json({"location": req.body.origin});
+       })
+      },
+}

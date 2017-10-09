@@ -63,6 +63,11 @@ module.exports.routes = {
 
   'POST /chat/:chatroom/leave': 'ChatroomController.leave',
 
+  'POST /chat/:chatroom/settings/addChatMember': 'ChatroomController.addChatMember',
+
+  'POST /chat/:chatroom/settings/removeChatMember': 'ChatroomController.removeChatMember',
+
+  'POST /chat/:chatroom/settings/blockChatMember': 'ChatroomController.blockChatMember',
 
   //Authentication Routes
   'GET /login': {
@@ -82,6 +87,5 @@ module.exports.routes = {
   'GET /user/:username': 'UserController.detail',
 
   '/logout': 'UserController.logout'
-
 
 };

@@ -28,6 +28,12 @@ module.exports = {
     chats: {
       collection: 'chatroom',
       via: 'members'
+    },
+
+    bannedFrom: {
+        collection: 'chatroom',
+        via: 'blocked'
     }
+
   },
 }

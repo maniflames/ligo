@@ -16,6 +16,11 @@ module.exports = {
     members: {
       collection: 'user',
       via: 'chats'
+    },
+
+    blocked: {
+       collection: 'user',
+       via: 'bannedFrom'
     }
   },
 
