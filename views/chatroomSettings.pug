@@ -7,9 +7,11 @@ block content
   - var blockURL = sails.getUrlFor('ChatroomController.blockChatMember')
   
   div#origin(style="display:none;" data-url=originURL.replace(":chatroom", chat.id))
+  div#remove(style="display:none;" data-url=removeURL.replace(":chatroom", chat.id))
+  div#block(style="display:none;" data-url=blockURL.replace(":chatroom", chat.id))
   h1 Settings
 
-    ul 
+    ul#chatMembers 
       h5 Members
       each member in chat.members
         li #{member.username}
@@ -22,10 +24,9 @@ block content
               data-username = member.username
             ) block
           
-      li
-        +formField('text')(id='addChatMemberUsername', placeholder='username')
-      li
-        button#addChatMember(
+      
+    +formField('text')(id='addChatMemberUsername', placeholder='username')
+    button#addChatMember(
             data-action = addMemberUrl.replace(":chatroom", chat.id),
           ) add
           

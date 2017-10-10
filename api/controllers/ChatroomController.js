@@ -124,7 +124,7 @@ module.exports = {
               }
           })
 
-           return res.json({"location": req.body.origin});
+           return res.json({"username": foundUser.username});
 
       })
   },

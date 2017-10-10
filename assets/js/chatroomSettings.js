@@ -1,5 +1,8 @@
 window.addEventListener('load', init);
 const originURL = document.getElementById('origin').getAttribute('data-url');
+const removeURL = document.getElementById('remove').getAttribute('data-url');
+const blockURL = document.getElementById('block').getAttribute('data-url');
+const chatMembers = document.getElementById('chatMembers');
 
 function init(){
     const content = document.getElementById('content');
@@ -37,12 +40,36 @@ function leave(req) {
 }
 
 function addChatMember(req){
+
     const data = {
-        username: document.getElementById('addChatMemberUsername').innerHTML,
+        username: document.getElementById('addChatMemberUsername').value,
         origin: originURL
     }
 
-    sendPostReq(req, data);
+    sendPostReq(req, data, addChatMemberSucces);
+}
+
+function addChatMemberSucces(res){
+    console.log(res); 
+
+    let li = document.createElement('li');
+    li.innerHTML = res.username;
+
+    let buttonRemove = document.createElement('button');
+    buttonRemove.setAttribute('data-action', removeURL);
+    buttonRemove.setAttribute('data-username', res.username);
+    buttonRemove.innerHTML = "X";
+
+
+    let buttonBlock = document.createElement('button');
+    buttonBlock.setAttribute('data-action', blockURL);
+    buttonBlock.setAttribute('data-username', res.username);
+    buttonBlock.innerHTML = "block";
+
+    li.appendChild(buttonRemove);
+    li.appendChild(buttonBlock);
+
+    chatMembers.appendChild(li);
 }
 
 //removing chatroom member
