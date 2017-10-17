@@ -11,7 +11,7 @@ module.exports = {
 		.populate('chats')
 		.exec(function(err, userAndChats){
 			if(err){
-				sails.log.error(err);
+				console.log(err);
 				return res.view(err);
 			}
 			return res.view('dashboard', {chats: userAndChats.chats});
@@ -25,7 +25,7 @@ module.exports = {
 			})
 			.catch(function(err){
 				sails.log.error(err);
-				return res.view('error');
+				return res.view('register', {errors: err});
 			})
 	},
 
@@ -36,20 +36,16 @@ module.exports = {
 			})
 			.catch(function(err){
 				sails.log.error(err);
-				return res.view('error');
+				return res.view('login',  {errors: err});
 			})
 	},
 
 	logout: function(req, res){
-
-		req.session.userId = undefined;
-		req.session.authenticated = false;
-
+		res.clearCookie('sid');
 		return res.redirect('login');
 	},
 
 	settings: function(req, res){
-		sails.log.debug(req.session.userId);
 		return res.view('userSettings', {id: req.session.userId});
 	},
 

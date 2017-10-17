@@ -1,5 +1,9 @@
 extends page-layout.pug 
 block content
+  if errors
+    each e in errors
+      p #{e.error}
+  
   h1.
     Sign up  
   
