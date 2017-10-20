@@ -63,6 +63,9 @@ module.exports.policies = {
     },
 
     ChatroomController: {
-      '*': ['sessionAuth']
+      '*': ['sessionAuth'],
+      addChatMember: ['isAdmin'],
+      removeChatMember: ['isAdmin'],
+      blockChatMember: ['isAdmin']
     }
 };

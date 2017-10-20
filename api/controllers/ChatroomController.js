@@ -28,6 +28,8 @@ module.exports = {
       }
 
       newChat.members.add(req.session.userId);
+      newChat.admins.add(req.session.userId);
+
       newChat.save(function(err){
         if(err){
           sails.log.error(err);
@@ -42,6 +44,7 @@ module.exports = {
 
   settings: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
+    .populate('admins')
     .populate('members')
     .exec(function(err, foundChat){
       if(err){
@@ -65,9 +68,6 @@ module.exports = {
         sails.log.error(err);
         return res.view('error');
       }
-
-      sails.log.debug(foundChat);
-      sails.log.debug(req.params.chatroom);
 
       if(foundChat === undefined){
           return res.view('error');

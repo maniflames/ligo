@@ -50,7 +50,7 @@ function addChatMember(req){
 }
 
 function addChatMemberSucces(res){
-    console.log(res); 
+    console.log(res);
 
     let li = document.createElement('li');
     li.innerHTML = res.username;
@@ -74,6 +74,7 @@ function addChatMemberSucces(res){
 
 //removing chatroom member
 function removeChatMember(req){
+    console.log(req);
     sendPostReqStandardFormat(req);
 }
 

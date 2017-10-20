@@ -18,6 +18,11 @@ module.exports = {
       via: 'chats'
     },
 
+    admins: {
+        collection: 'user',
+        via: 'adminOf'
+    },
+
     blocked: {
        collection: 'user',
        via: 'bannedFrom'

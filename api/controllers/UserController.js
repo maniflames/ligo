@@ -51,6 +51,10 @@ module.exports = {
 
 	dashboardSearch: function(req, res){
 
+		if(req.body.search === ''){
+			return res.redirect(sails.getUrlFor('UserController.index'));
+		}
+
 		SearchService.chatNameAndChatMember(req)
 		.then(function(results){
 			return res.view('dashboard', {chats: results});

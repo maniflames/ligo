@@ -11,6 +11,11 @@ block content
   div#block(style="display:none;" data-url=blockURL.replace(":chatroom", chat.id))
   h1 Settings
 
+    ul#chatAdmins
+      h5 admins
+      each admin in chat.admins
+        li #{admin.username}
+
     ul#chatMembers 
       h5 Members
       each member in chat.members

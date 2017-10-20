@@ -112,9 +112,4 @@ module.exports = {
         })
     },
 
-    analyseSearch: function(req){
-
-    }
-
-
 }

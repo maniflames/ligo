@@ -19,3 +19,9 @@ block content
       each chat in chats
         a(href=chatUrl.replace(':chatroom', chat.id)) 
           h3 #{chat.name}
+        if chat.members
+          ul
+          each member in chat.members
+            li #{member.username}
+          
+          

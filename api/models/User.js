@@ -30,6 +30,11 @@ module.exports = {
       via: 'members'
     },
 
+    adminOf:{
+      collection: 'chatroom',
+      via: 'admins'
+    },
+
     bannedFrom: {
         collection: 'chatroom',
         via: 'blocked'
