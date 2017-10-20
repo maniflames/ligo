@@ -5,8 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const nested = require('nested-pop');
-
 module.exports = {
 	index: function(req, res){
 		User.findOne({id: req.session.userId})
@@ -53,28 +51,13 @@ module.exports = {
 
 	dashboardSearch: function(req, res){
 
-		const rawSearch = req.body.search;
-		const splitSearch = rawSearch.split(' ');
-		const searchMemberQueue = splitSearch.map(function(query){
-			return {username: {'like': '%' + query + '%'}};
-		});
-		const searchChatQueue = splitSearch.map(function(query){
-			return {name: {'like': '%' + query + '%'}};
-		})
-		var finalResults = [];
-
-		SearchService.chatName(req, searchChatQueue)
-		.then(function(chatResults){
-			finalResults = _.union(finalResults, chatResults);
-			return SearchService.chatMemberName(req, searchMemberQueue);
-		})
-		.then(function(memberResults){
-			finalResults = _.union(finalResults, memberResults);
-			return res.view('dashboard', {chats: finalResults});
+		SearchService.chatNameAndChatMember(req)
+		.then(function(results){
+			return res.view('dashboard', {chats: results});
 		})
 		.catch(function(err){
 			return sails.log.error(err);
-		})
+		});
 
 	},
 
