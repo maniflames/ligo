@@ -47,7 +47,9 @@ module.exports.routes = {
   '/': 'UserController.index',
 
   //Dashboard related Routes
-  '/dashboard': 'UserController.index',
+  'GET /dashboard': 'UserController.index',
+
+  'POST /dashboard/results': 'UserController.dashboardSearch',
 
   'GET /chat': {
     view: 'addChatroom'

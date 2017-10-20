@@ -8,7 +8,10 @@ block content
   |
   |
   +a(sails.getUrlFor('ChatroomController.add'), 'New Chat')
-   
+  
+  form(method='POST', action=sails.getUrlFor('UserController.dashboardSearch'))
+    +formField('text', 'search')
+    +formField('submit')(value="search")
      
   div.chatsContainer
     if chats
