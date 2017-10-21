@@ -80,5 +80,22 @@ module.exports = {
 
 				return res.view('userDetail', {user: foundUser});
 		});
+	},
+
+	detailEdit: function(req, res){
+		User.findOne({username: req.params.username}).exec(function(err, foundUser){
+			if(err){
+				sails.log.error(err)
+				return res.view('error');
+			}
+
+			if(foundUser == undefined || foundUser == ''){
+				//LIGO: Change his into a 404 once I've made it
+				sails.log.error('Not a user');
+				return res.view('error');
+			}
+
+				return res.view('userDetailEdit', {user: foundUser});
+		});
 	}
 };

@@ -35,7 +35,7 @@ module.exports = {
       via: 'admins'
     },
 
-    bannedFrom: {
+    blockedFrom: {
         collection: 'chatroom',
         via: 'blocked'
     }

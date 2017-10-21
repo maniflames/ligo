@@ -26,7 +26,7 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': 'sessionAuth',
+  '*': false,
 
   /***************************************************************************
   *                                                                          *
@@ -59,13 +59,14 @@ module.exports.policies = {
     UserController: {
       '*': ['sessionAuth'],
       login: true,
-      register: true
+      register: true,
+      detailEdit: ['sessionAuth', 'isSpecifiedUser']
     },
 
     ChatroomController: {
-      '*': ['sessionAuth'],
-      addChatMember: ['isAdmin'],
-      removeChatMember: ['isAdmin'],
-      blockChatMember: ['isAdmin']
+      '*': ['sessionAuth', 'isNotBlocked'],
+      addChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin'],
+      removeChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin'],
+      blockChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin']
     }
 };

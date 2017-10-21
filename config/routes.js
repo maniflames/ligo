@@ -88,6 +88,8 @@ module.exports.routes = {
 
   'GET /user/:username': 'UserController.detail',
 
+   'GET /user/:username/edit': 'UserController.detailEdit',
+
   '/logout': 'UserController.logout'
 
 };

@@ -10,7 +10,9 @@ block content
     form(method='POST')
       +formField('text', 'username', 'username')
       +formField('password', 'password', 'password')
+      +formField('hidden', '_csrf')(value= _csrf)
       +formField('submit', 'login')(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
+      
 
     div
       p not a member yet? 

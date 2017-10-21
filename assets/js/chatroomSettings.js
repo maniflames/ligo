@@ -97,25 +97,35 @@ function sendPostReqStandardFormat(req){
     sendPostReq(req, data, redirectHandler);
 }
 
-function sendPostReq(req, data = false, cb ){
-    let request = {
-        url: req.getAttribute('data-action'),
-        method: 'post',
-        error: function(err){
-            console.log(err);
-        },
-        success: function(res){
-            console.log(res);
+function sendPostReq( req, data = false, cb){
+    reqwest({
+        url: '/csrfToken',
+        method: 'get',
+        success: function(token){
+                let request = {
+                    url: req.getAttribute('data-action'),
+                    method: 'post',
+                    data: {},
+                    error: function(err){
+                        console.log(err);
+                    },
+                    success: function(res){
+                        console.log(res);
+                    }
+                };
+
+                if(data){
+                    request.data = data;
+                }
+
+                request.data._csrf = token._csrf;
+
+
+                if(cb){
+                    request.success = cb;
+                }
+
+                reqwest(request);
         }
-    };
-
-    if(data){
-        request.data = data;
-    }
-
-    if(cb){
-        request.success = cb;
-    }
-
-    reqwest(request);
+    });
 }

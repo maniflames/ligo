@@ -25,7 +25,7 @@ module.exports = {
 
     blocked: {
        collection: 'user',
-       via: 'bannedFrom'
+       via: 'blockedFrom'
     }
   },
 

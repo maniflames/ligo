@@ -170,7 +170,7 @@ module.exports = {
             }
 
             foundUser.chats.remove(req.params.chatroom);
-            foundUser.bannedFrom.add(req.params.chatroom);
+            foundUser.blockedFrom.add(req.params.chatroom);
             foundUser.save(function(err){
                 if(err){
                     sails.log.error(err);
