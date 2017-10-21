@@ -1,0 +1,8 @@
+extends page-layout
+block content
+  h1 #{user.username}
+  small edit page
+  if user.bio 
+    p #{user.bio}
+//- these things need to be fields lol
+//- obviously a work in progress
