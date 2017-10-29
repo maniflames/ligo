@@ -13,6 +13,6 @@ module.exports = function(req, res, next) {
     return next();
   }
 
-    return res.redirect('register');
+    return res.redirect(sails.getUrlFor('UserController.register'));
 
 };

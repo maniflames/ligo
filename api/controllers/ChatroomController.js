@@ -5,13 +5,14 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+
 module.exports = {
   show: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
     .exec(function(err, foundChat){
       if(err){
         sails.log.error(err);
-        return res.view('error');
+        return res.serverError();
       }
 
       return res.view('chatroom', {chat: foundChat});
@@ -20,11 +21,29 @@ module.exports = {
   },
 
   add: function(req, res){
+     let notContains = ['<', '>', '\'', '\\', '/', '(', ')', '"', '}', '{', '[', ']', "*"];
+     let errors = [];
+
+      notContains.map(function(char){
+          if(req.body.chatname.indexOf(char) != -1){
+              valid = false;
+              errors.push({error: 'You can\'t use ' + char + ' in your username'});
+          }
+      })
+
+      if(!valid){
+          return res.view('addChatroom', {"errors": errors})
+      }
+
+      if(req.body.chatname = ''){
+          return res.view('addChatroom', {"errors": [{"error": "Name of chatroom cannot be empty"}]})
+      }
+
     Chatroom.create({name: req.body.chatname})
     .exec(function(err, newChat){
       if(err){
         sails.log.error(err);
-        return res.view('error');
+        return res.serverError();
       }
 
       newChat.members.add(req.session.userId);
@@ -33,10 +52,10 @@ module.exports = {
       newChat.save(function(err){
         if(err){
           sails.log.error(err);
-          return res.view('error');
+         return res.serverError();
         }
 
-        return res.redirect('/');
+        return res.redirect(sails.getUrlFor('UserController.index'));
 
       });
     })
@@ -46,10 +65,11 @@ module.exports = {
     Chatroom.findOne({id: req.params.chatroom})
     .populate('admins')
     .populate('members')
+    .populate('blocked')
     .exec(function(err, foundChat){
       if(err){
         sails.log.error(err);
-        return res.view('error');
+        return res.serverError();
       }
 
       return res.view('chatroomSettings', {chat: foundChat});
@@ -57,20 +77,34 @@ module.exports = {
     })
 	},
 
-//LIGO: !! functionality preferably in ONE Query, send the amount of chatroom members in request
-//Smartest thing to do would be to add a policy
-//Look into sum and stuff it could really slim this thing.
+    settingsEdit: function(req, res){
+      Chatroom.findOne({id: req.params.chatroom})
+      .populate('admins')
+      .populate('members')
+      .populate('blocked')
+      .exec(function(err, foundChat){
+        if(err){
+          sails.log.error(err);
+          return res.serverError();
+        }
+
+        return res.view('chatroomSettingsEdit', {chat: foundChat});
+
+      })
+      },
+
+
   leave: function(req, res){
     Chatroom.findOne({id: req.params.chatroom})
     .populate('members')
     .exec(function(err, foundChat){
       if(err){
         sails.log.error(err);
-        return res.view('error');
+        return res.serverError();
       }
 
       if(foundChat === undefined){
-          return res.view('error');
+          return res.notFound();
       }
 
       if(foundChat.members.length > 1){
@@ -78,10 +112,10 @@ module.exports = {
         foundChat.save(function(err){
           if(err){
             sails.log.error(err);
-            return res.view('error');
+            return res.serverError();
           }
 
-          return res.json({"location":"/"});
+          return res.redirect(sails.getUrlFor('UserController.index'));
 
         });
 
@@ -91,16 +125,14 @@ module.exports = {
         .exec(function(err, destroyedChat){
             if(err){
                 sails.log.error(err);
-                return res.view('error');
+                return res.serverError();
             }
 
-            return res.json({"location":"/"});
+             return res.redirect(sails.getUrlFor('UserController.index'));
         })
       }
     })
   },
-
-  //LIGO: write chatMember service
 
   addChatMember: function(req, res){
 
@@ -109,18 +141,18 @@ module.exports = {
       .exec(function(err, foundUser){
           if(err){
               sails.log.error(err);
-              return res.view('error');
+              return res.serverError();
           }
 
           if(foundUser === undefined){
-              return res.redirect('/');
+              return res.json({"errors": [{"error": "User not found"}]});
           }
 
           foundUser.chats.add(req.params.chatroom);
           foundUser.save(function(err){
               if(err){
                   sails.log.error(err);
-                  return res.view('error');
+                  return res.serverError();
               }
           })
 
@@ -136,22 +168,22 @@ module.exports = {
       .exec(function(err, foundUser){
           if(err){
               sails.log.error(err);
-              return res.json({"location":"/"});
+              return res.serverError();
           }
 
           if(foundUser === undefined){
-              return res.json({"location":"/"});
+              return res.notFound();
           }
 
           foundUser.chats.remove(req.params.chatroom);
           foundUser.save(function(err){
               if(err){
                   sails.log.error(err);
-                  return res.json({"location":"/"});
+                  return res.serverError();
               }
           });
 
-         return res.json({"location": req.body.origin});
+         return res.ok();
      })
     },
 
@@ -162,23 +194,48 @@ module.exports = {
         .exec(function(err, foundUser){
             if(err){
                 sails.log.error(err);
-                return res.json({"location":"/"});
+                return res.serverError();
             }
 
             if(foundUser === undefined){
-                return res.json({"location":"/"});
+                return res.notFound();
             }
 
-            foundUser.chats.remove(req.params.chatroom);
-            foundUser.blockedFrom.add(req.params.chatroom);
+            let unblock = true;
+
+            foundUser.chats.map(function(chat){
+
+                if(chat.id == req.params.chatroom){
+                    unblock = false;
+                }
+
+                return;
+            });
+
+            if(unblock){
+
+                foundUser.chats.add(req.params.chatroom);
+                foundUser.blockedFrom.remove(req.params.chatroom);
+                status = 'unblocked';
+
+            } else {
+
+                foundUser.chats.remove(req.params.chatroom);
+                foundUser.blockedFrom.add(req.params.chatroom);
+                status = 'blocked';
+            }
+
             foundUser.save(function(err){
                 if(err){
                     sails.log.error(err);
-                    return res.json({"location":"/"});
+                    return res.serverError();
                 }
-            });
 
-           return res.json({"location": req.body.origin});
+            return res.ok();
+
+
+            });
        })
       },
+
 }

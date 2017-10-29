@@ -1,7 +1,4 @@
 window.addEventListener('load', init);
-const originURL = document.getElementById('origin').getAttribute('data-url');
-const removeURL = document.getElementById('remove').getAttribute('data-url');
-const blockURL = document.getElementById('block').getAttribute('data-url');
 const chatMembers = document.getElementById('chatMembers');
 
 function init(){
@@ -36,40 +33,20 @@ function optionsClickHandler(e){
 
 //Leaving chatroom
 function leave(req) {
-    sendPostReq(req, false, redirectHandler);
+    sendPostReq(req, false);
 }
 
 function addChatMember(req){
 
     const data = {
         username: document.getElementById('addChatMemberUsername').value,
-        origin: originURL
     }
 
-    sendPostReq(req, data, addChatMemberSucces);
+    sendPostReq(req, data, pageReload);
 }
 
-function addChatMemberSucces(res){
-    console.log(res);
-
-    let li = document.createElement('li');
-    li.innerHTML = res.username;
-
-    let buttonRemove = document.createElement('button');
-    buttonRemove.setAttribute('data-action', removeURL);
-    buttonRemove.setAttribute('data-username', res.username);
-    buttonRemove.innerHTML = "X";
-
-
-    let buttonBlock = document.createElement('button');
-    buttonBlock.setAttribute('data-action', blockURL);
-    buttonBlock.setAttribute('data-username', res.username);
-    buttonBlock.innerHTML = "block";
-
-    li.appendChild(buttonRemove);
-    li.appendChild(buttonBlock);
-
-    chatMembers.appendChild(li);
+function pageReload(){
+    window.location.reload(true);
 }
 
 //removing chatroom member
@@ -79,39 +56,49 @@ function removeChatMember(req){
 }
 
 function blockChatMember(req){
-    sendPostReqStandardFormat(req);
+
+    const data = {
+        username: req.getAttribute('data-username')
+    }
+
+    sendPostReqStandardFormat(req); 
+
+    //sendPostReq(req, data, blockChatMemberSucces(req));
 }
 
-function redirectHandler(res){
-    window.location.href = window.location.origin + res.location;
+function blockChatMemberSucces(button){
+
+    if(button.innerHTML == 'block'){
+        button.innerHTML = 'unblock';
+    } else {
+        button.innerHTML = 'block';
+    }
 }
 
 //sending ajax request
-
 function sendPostReqStandardFormat(req){
     const data = {
-        username: req.getAttribute('data-username'),
-        origin: originURL
+        username: req.getAttribute('data-username')
     }
 
-    sendPostReq(req, data, redirectHandler);
+    sendPostReq(req, data, pageReload);
 }
 
-function sendPostReq( req, data = false, cb){
+function sendPostReq( req, data = false, cb = false){
     reqwest({
         url: '/csrfToken',
         method: 'get',
         success: function(token){
                 let request = {
-                    url: req.getAttribute('data-action'),
-                    method: 'post',
-                    data: {},
-                    error: function(err){
-                        console.log(err);
-                    },
-                    success: function(res){
-                        console.log(res);
-                    }
+                        url: req.getAttribute('data-action'),
+                        method: 'post',
+                        data: {},
+                        error: function(err){
+                            console.log(err);
+                        },
+                        success: function(res){
+                            console.log(res);
+                        }
                 };
 
                 if(data){

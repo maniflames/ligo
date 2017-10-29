@@ -1,8 +1,16 @@
 extends page-layout
 block content
-  h1 #{user.username}
-  small edit page
-  if user.bio 
-    p #{user.bio}
-//- these things need to be fields lol
-//- obviously a work in progress
+  - var links = [{"href": sails.getUrlFor('UserController.index'), "name": "Back"}]
+  include template-parts/header.pug
+  if errors
+    each e in errors
+      p #{e.error}
+  
+  h1.center #{user.username}
+  form(method="POST", action=sails.getUrlFor('UserController.detailEditSave').replace(':username', user.username), class="col m6 center")
+    if user.bio
+      +formField('text', 'bio')(value= user.bio)
+    else 
+      +formField('text', 'bio')
+    +formField('hidden', '_csrf')(value= _csrf)
+    +formField('submit')(class="waves-effect waves-light btn col s6 center", value="save")

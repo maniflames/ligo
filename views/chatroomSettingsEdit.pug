@@ -1,0 +1,54 @@
+extends page-layout.pug 
+block content
+  - var title = chat.name + " | Settings"
+  - var links = [{"href": sails.getUrlFor('ChatroomController.settings').replace(":chatroom", chat.id), "name": "Back"}]
+  include template-parts/header.pug
+  if errors
+    each e in errors
+      p #{e.error}
+  
+  - var addMemberUrl = sails.getUrlFor('ChatroomController.addChatMember')
+  - var leaveURL = sails.getUrlFor('ChatroomController.leave')
+  - var originURL = sails.getUrlFor('ChatroomController.settings')
+  - var removeURL = sails.getUrlFor('ChatroomController.removeChatMember')
+  - var blockURL = sails.getUrlFor('ChatroomController.blockChatMember')
+  
+  div#content.container
+    ul#chatAdmins
+      h5 Admin
+        each admin in chat.admins
+          li 
+            small #{admin.username}
+    
+    h5 Members
+    table#chatMembers 
+      tr 
+        td
+          b Usernames
+        td 
+          b Block
+        td 
+          b Remove
+      each member in chat.members
+        tr 
+          td #{member.username}
+          td
+            button.blockChatMember(data-action = blockURL.replace(":chatroom", chat.id), data-username = member.username, class="waves-effect waves-light btn") block
+          td 
+            button.removeChatMember(data-action = removeURL.replace(":chatroom", chat.id), data-username = member.username, class="waves-effect waves-light btn deep-orange accent-3") X
+      each member in chat.blocked
+        tr 
+          td #{member.username}
+          td 
+            button.blockChatMember(data-action = blockURL.replace(":chatroom", chat.id), data-username = member.username, class="waves-effect waves-light btn") unblock
+          td 
+            button.removeChatMember(data-action = removeURL.replace(":chatroom", chat.id), data-username = member.username, class="waves-effect waves-light btn deep-orange accent-3", disabled) X
+      tr        
+        +formField('text')(id='addChatMemberUsername', placeholder='username')
+        button#addChatMember(data-action = addMemberUrl.replace(":chatroom", chat.id), class="waves-effect waves-light btn") add
+          
+       
+    button#leave(data-action = leaveURL.replace(":chatroom", chat.id), class="waves-effect waves-light btn deep-orange accent-3") leave
+
+block append scripts
+  script(src="/js/chatroomSettings.js", autoConnect="false")

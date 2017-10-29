@@ -1,0 +1,11 @@
+nav
+  div.nav-wrapper  
+    if title
+      a.brand-logo(href=sails.getUrlFor('UserController.index')) Ligo | #{title}
+    else
+      a.brand-logo(href=sails.getUrlFor('UserController.index')) Ligo
+    if links
+      ul#nav-mobile.right.hide-on-med-and-down
+        each link in links
+          li
+            a(href= link.href) #{link.name}

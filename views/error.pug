@@ -1,6 +1,14 @@
-doctype
-html
-  head
-  body
-    h1.
-      Something went wrong lol
+extends page-layout.pug 
+block content
+  include template-parts/header.pug
+  div.error-container
+      if title
+        h3 #{title}
+      else
+        h3 Something went wrong lol
+      if data
+        p #{data}
+      
+      a.white-text( href=sails.getUrlFor('UserController.index')) 
+        button.waves-effect.waves-light.btn Back to the dashboard
+        

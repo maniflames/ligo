@@ -1,19 +1,27 @@
 extends page-layout.pug 
 block content
+  include template-parts/header.pug
   if errors
     each e in errors
       p #{e.error}
-  
-  h1.
-    Sign up  
-  
-  form(method="POST")      
-    +formField('text', 'username', 'username')
-    +formField('password', 'password', 'password')
-    +formField('password', 'repeat', 'repeat password')
-    +formField('hidden', '_csrf')(value= _csrf)
-    +formField('submit')
       
-  div
-    p already a member? 
+  div.login-signup-form
+    h1.
+      Sign up  
+  
+    form(method="POST")
+      div.input-field.col.s6
+        label(for='username') username
+        +formField('text', 'username')   
+      div.input-field.col.s6
+        label(for='password') password
+        +formField('password', 'password')
+      div.input-field.col.s6
+        label(for='repeat') repeat password
+        +formField('password', 'repeat')
+      +formField('hidden', '_csrf')(value= _csrf)
+      +formField('submit')(class="waves-effect waves-light btn", id="submit", value="Sign Up")
+      
+    div
+      p already a member? 
        +a(sails.getUrlFor('UserController.login'), 'login')

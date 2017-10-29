@@ -1,8 +1,18 @@
 extends page-layout
 block content
-  h1 new Chat
-  form(method="POST")
-    +formField('text', 'chatname', 'insert chat name')
-    +formField('hidden', '_csrf')(value= _csrf)
-    +formField('submit')(value='create', class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
+  - var title = "New Chatroom"
+  - links = [{"href": sails.getUrlFor('UserController.index'), "name": "cancel"}]
+  include template-parts/header.pug
+  
+  if errors
+    each e in errors
+      p #{e.error}
+      
+  div.container
+    form(method="POST")
+      div.input-field.col.s6
+        label(for='chatname') name
+        +formField('text', 'chatname', 'insert chat name')
+      +formField('hidden', '_csrf')(value= _csrf)
+      +formField('submit')(value="create", class="waves-effect waves-light btn")
     

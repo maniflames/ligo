@@ -1,5 +1,7 @@
 extends page-layout
 block content
-  h1 #{user.username}
+  - var links = [{"href":sails.getUrlFor('UserController.index'), "name":"Dashboard"}]
+  include template-parts/header.pug
+  h1.center #{user.username}
   if user.bio 
-    p #{user.bio}
+    p.center #{user.bio}

@@ -1,49 +1,31 @@
 extends page-layout.pug 
 block content
-  - var addMemberUrl = sails.getUrlFor('ChatroomController.addChatMember')
-  - var leaveURL = sails.getUrlFor('ChatroomController.leave')
-  - var originURL = sails.getUrlFor('ChatroomController.settings')
-  - var removeURL = sails.getUrlFor('ChatroomController.removeChatMember')
-  - var blockURL = sails.getUrlFor('ChatroomController.blockChatMember')
+  - var title = chat.name + " | Settings"
+  - var links = [{"href": sails.getUrlFor('ChatroomController.settingsEdit').replace(":chatroom", chat.id), "name": "Edit"},{"href": sails.getUrlFor('ChatroomController.show').replace(":chatroom", chat.id), "name": "Back"}]
+  include template-parts/header.pug
   
-  div#origin(style="display:none;" data-url=originURL.replace(":chatroom", chat.id))
-  div#remove(style="display:none;" data-url=removeURL.replace(":chatroom", chat.id))
-  div#block(style="display:none;" data-url=blockURL.replace(":chatroom", chat.id))
-  h1 Settings
+  - var leaveURL = sails.getUrlFor('ChatroomController.leave')
 
+  div#content.container
     ul#chatAdmins
-      h5 admins
-      each admin in chat.admins
-        li #{admin.username}
-
-    ul#chatMembers 
-      h5 Members
+      h5 Admin
+        each admin in chat.admins
+          li 
+            small #{admin.username}
+    
+    h5 Members
+    table#chatMembers 
+    
       each member in chat.members
-        li #{member.username}
-          button.removeChatMember(
-            data-action = removeURL.replace(":chatroom", chat.id),
-            data-username = member.username
-            ) X
-          button.blockChatMember(
-              data-action = blockURL.replace(":chatroom", chat.id),
-              data-username = member.username
-            ) block
-          
-      
-    +formField('text')(id='addChatMemberUsername', placeholder='username')
-    button#addChatMember(
-            data-action = addMemberUrl.replace(":chatroom", chat.id),
-          ) add
-          
-    ul
-      h5 blocked users
-      each user in chat.blocked
-        li #{user.username}
-        //LIGO: write unblock function
+        tr 
+          td #{member.username}
+          td
+      each member in chat.blocked
+        tr 
+          td #{member.username}
+          td blocked        
        
-  button#leave(data-action = leaveURL.replace(":chatroom", chat.id)) leave
+    button#leave(data-action = leaveURL.replace(":chatroom", chat.id), class="waves-effect waves-light btn deep-orange accent-3") leave
 
 block append scripts
-  script(src="/js/chatroomSettings.js",
-    autoConnect="false"
-  )
+  script(src="/js/chatroomSettings.js", autoConnect="false")

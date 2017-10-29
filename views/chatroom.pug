@@ -1,5 +1,10 @@
 extends page-layout
 block content
-  h1 #{chat.name}
-  - var settingsUrl = sails.getUrlFor('ChatroomController.settings')
-  +a(settingsUrl.replace(':chatroom', chat.id), 'settings')
+  - var title = chat.name
+  - var links = [{"href": sails.getUrlFor('ChatroomController.settings').replace(':chatroom', chat.id), "name": "Settings"}]
+  include template-parts/header.pug
+  main
+  footer
+    div.message-field
+      +formField('text', 'msg')
+      +formField('submit', 'send')(class="waves-effect waves-light btn", id="submit", value="send")

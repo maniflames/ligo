@@ -7,32 +7,55 @@
 
 module.exports = {
 	index: function(req, res){
+
 		User.findOne({id: req.session.userId})
 		.populate('chats')
 		.exec(function(err, userAndChats){
 			if(err){
 				console.log(err);
-				return res.view(err);
+				return res.serverError();
 			}
-			return res.view('dashboard', {chats: userAndChats.chats});
+
+			if(_.isEmpty(userAndChats.chats)){
+					return res.view('dashboard', {username: userAndChats.username});
+			}
+
+			let countQuery = 'SELECT chatroom_members__user_chats.chatroom_members AS chatroom, COUNT(chatroom_members__user_chats.chatroom_members) AS count FROM `user` INNER JOIN chatroom_members__user_chats ON user.id = chatroom_members__user_chats.user_chats GROUP BY chatroom_members__user_chats.chatroom_members';
+			User.query(countQuery, [], function(err, rawResult){
+
+			let chatsWithCount = [];
+
+				userAndChats.chats.map(function(chat){
+					rawResult.map(function(result){
+						if (result.chatroom == chat.id){
+							chat.count = result.count;
+							chatsWithCount.push(chat);
+						}
+					})
+				});
+
+				return res.view('dashboard', {chats: chatsWithCount, username: userAndChats.username});
+
+			})
+
 		})
 	},
 
 	register: function(req, res){
-			AuthService.register(req)
-			.then(function(newUser){
-				return res.redirect('/');
-			})
-			.catch(function(err){
-				sails.log.error(err);
-				return res.view('register', {errors: err});
-			})
+		AuthService.register(req)
+		.then(function(newUser){
+			return res.redirect(sails.getUrlFor('UserController.login'));
+		})
+		.catch(function(err){
+			sails.log.error(err);
+			return res.view('register', {errors: err});
+		})
 	},
 
 	login: function(req, res){
       AuthService.login(req)
 			.then(function(loggedInUser){
-				return res.redirect('/');
+				return res.redirect(sails.getUrlFor('UserController.index'));
 			})
 			.catch(function(err){
 				sails.log.error(err);
@@ -42,7 +65,7 @@ module.exports = {
 
 	logout: function(req, res){
 		res.clearCookie('sid');
-		return res.redirect('login');
+		return res.redirect(sails.getUrlFor('UserController.login'));
 	},
 
 	settings: function(req, res){
@@ -60,7 +83,8 @@ module.exports = {
 			return res.view('dashboard', {chats: results});
 		})
 		.catch(function(err){
-			return sails.log.error(err);
+		 	sails.log.error(err);
+			return res.serverError();
 		});
 
 	},
@@ -69,13 +93,11 @@ module.exports = {
 		User.findOne({username: req.params.username}).exec(function(err, foundUser){
 			if(err){
 				sails.log.error(err)
-				return res.view('error');
+				return res.serverError();
 			}
 
 			if(foundUser == undefined || foundUser == ''){
-				//LIGO: Change his into a 404 once I've made it
-				sails.log.error('Not a user');
-				return res.view('error');
+				return res.notFound();
 			}
 
 				return res.view('userDetail', {user: foundUser});
@@ -86,16 +108,27 @@ module.exports = {
 		User.findOne({username: req.params.username}).exec(function(err, foundUser){
 			if(err){
 				sails.log.error(err)
-				return res.view('error');
+				return res.serverError();
 			}
 
 			if(foundUser == undefined || foundUser == ''){
-				//LIGO: Change his into a 404 once I've made it
-				sails.log.error('Not a user');
-				return res.view('error');
+				return res.notFound();
 			}
 
 				return res.view('userDetailEdit', {user: foundUser});
 		});
+	},
+
+	detailEditSave: function(req, res){
+		sails.log.debug(req.body.bio);
+		User.update({username: req.params.username}, {bio: req.body.bio}).exec(function(err, updatedUser){
+			if(err){
+				sails.log.error(err)
+				return res.serverError();
+			}
+
+			return res.redirect(sails.getUrlFor('UserController.detailEdit').replace(':username', req.params.username));
+		})
 	}
+
 };

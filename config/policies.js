@@ -60,13 +60,17 @@ module.exports.policies = {
       '*': ['sessionAuth'],
       login: true,
       register: true,
-      detailEdit: ['sessionAuth', 'isSpecifiedUser']
+      detailEdit: ['sessionAuth', 'isSpecifiedUser'],
+      detailEditSave: ['sessionAuth', 'isSpecifiedUser'],
     },
 
     ChatroomController: {
-      '*': ['sessionAuth', 'isNotBlocked'],
-      addChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin'],
-      removeChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin'],
-      blockChatMember: ['sessionAuth', 'isNotBlocked', 'isAdmin']
+      '*': ['sessionAuth', 'isNotBlocked', 'isChatMember'],
+      add: 'sessionAuth',
+      create: 'sessionAuth',
+      settingsEdit: ['sessionAuth', 'isNotBlocked', 'isChatMember', 'isAdmin'],
+      addChatMember: ['sessionAuth', 'isNotBlocked', 'isChatMember', 'isAdmin'],
+      removeChatMember: ['sessionAuth', 'isNotBlocked', 'isChatMember', 'isAdmin'],
+      blockChatMember: ['sessionAuth', 'isNotBlocked', 'isChatMember', 'isAdmin']
     }
 };

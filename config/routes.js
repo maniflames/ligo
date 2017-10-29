@@ -63,6 +63,8 @@ module.exports.routes = {
 
   'GET /chat/:chatroom/settings': 'ChatroomController.settings',
 
+  'GET /chat/:chatroom/settings/edit': 'ChatroomController.settingsEdit',
+
   'POST /chat/:chatroom/leave': 'ChatroomController.leave',
 
   'POST /chat/:chatroom/settings/addChatMember': 'ChatroomController.addChatMember',
@@ -88,7 +90,9 @@ module.exports.routes = {
 
   'GET /user/:username': 'UserController.detail',
 
-   'GET /user/:username/edit': 'UserController.detailEdit',
+  'GET /user/:username/edit': 'UserController.detailEdit',
+
+  'POST /user/:username/edit/save': 'UserController.detailEditSave',
 
   '/logout': 'UserController.logout'
 

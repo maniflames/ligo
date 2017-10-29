@@ -1,22 +1,22 @@
 /**
- * isAdmin
+ * isChatMember
  *
  * @module      :: Policy
- * @description :: Simple policy to allow any admin
+ * @description :: Simple policy to allow members from a chat
  * @docs        :: http://sailsjs.org/#!/documentation/concepts/Policies
  *
  */
 module.exports = function(req, res, next) {
 
     Chatroom.findOne({id: req.params.chatroom})
-    .populate('admins', {id: req.session.userId})
+    .populate('members', {id: req.session.userId})
     .exec(function(err, foundChat){
         if(err){
             sails.log.error(err);
             return res.serverError();
         }
 
-        if(! _.isEmpty(foundChat.admins) ){
+        if(! _.isEmpty(foundChat.members)){
             return next();
         }
 

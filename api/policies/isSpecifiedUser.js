@@ -9,6 +9,11 @@
 module.exports = function(req, res, next) {
 
     User.findOne({id: req.session.userId}).exec(function(err, foundUser){
+        if(err){
+            sails.log.error(err);
+            return res.serverError();
+        }
+
         if(foundUser.username === req.params.username){
             return next();
         }

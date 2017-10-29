@@ -1,28 +1,31 @@
 extends page-layout.pug 
 block content
-  h1 Welcome
-  +a(sails.getUrlFor('UserController.settings'), 'settings')
-  |
-  |
-  +a(sails.getUrlFor('UserController.logout'), 'logout')
-  |
-  |
-  +a(sails.getUrlFor('ChatroomController.add'), 'New Chat')
+  -  var links = [{"href": sails.getUrlFor('ChatroomController.add'), "name": "New Chat"}, {"href": sails.getUrlFor('UserController.detailEdit').replace(':username', username), "name": "Settings"},{"href": sails.getUrlFor('UserController.logout'), "name": "Logout"}]
+  include template-parts/header.pug
   
-  form(method='POST', action=sails.getUrlFor('UserController.dashboardSearch'))
-    +formField('text', 'search')
-    +formField('hidden', '_csrf')(value= _csrf)
-    +formField('submit')(value="search")
+  div.container
+    form(method='POST', action=sails.getUrlFor('UserController.dashboardSearch'))
+      +formField('text', 'search')
+      +formField('hidden', '_csrf')(value= _csrf)
+      +formField('submit')(class="waves-effect waves-light btn col s12", value="search")
      
-  div.chatsContainer
-    if chats
-      - var chatUrl = sails.getUrlFor('ChatroomController.show')
-      each chat in chats
-        a(href=chatUrl.replace(':chatroom', chat.id)) 
-          h3 #{chat.name}
-        if chat.members
-          ul
-          each member in chat.members
-            li #{member.username}
-          
+
+      ul.chat-container
+        if chats
+          - var chatUrl = sails.getUrlFor('ChatroomController.show')
+          each chat in chats
+            li
+              div.col.s4
+                div.card.blue-grey.lighten-3.white-text
+                  span.card-title #{chat.name}
+                  div.card-action
+                    a(href=chatUrl.replace(':chatroom', chat.id), class="teal-text") go
+                    p #{chat.count} member(s)
+                    if chat.members
+                      ul
+                        each member in chat.members
+                          li #{member.username}
+        else 
+          li 
+            h4 No Chatrooms
           

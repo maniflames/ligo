@@ -5,25 +5,24 @@ html
       Ligo | Page
     //- #{title}
     block css
+      link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
       // STYLES
-      link(rel="stylesheet", href="/styles/material-design-lite/material.min.css")
+      link(rel="stylesheet", href="/styles/materialize-css/dist/css/materialize.min.css")
       link(rel="stylesheet", href="/styles/importer.css")
-      link(rel="stylesheet", href="/styles/style.css")
       // STYLES END
       
-  body
-    header
-    include partials/form.pug 
-    include partials/hyperlink.pug 
-    div#content
-      block content
-      
-    footer
+  
+  body   
+    include mixins/form.pug 
+    include mixins/hyperlink.pug 
+    
+    block content
       
     block scripts
+      script(type="text/javascript", src="https://code.jquery.com/jquery-3.2.1.min.js")
       // SCRIPTS
       script(src="/js/dependencies/sails.io.js")
+      script(src="/styles/materialize-css/dist/js/materialize.min.js")
       script(src="/js/dependencies/reqwest.min.js")
-      script(src="/styles/material-design-lite/material.min.js")
       // SCRIPTS END
     

@@ -11,7 +11,11 @@ module.exports = function(req, res, next) {
     Chatroom.findOne({id: req.params.chatroom})
     .populate('blocked', {id: req.session.userId})
     .exec(function(err, foundChat){
-
+        if(err){
+            sails.log.error(err);
+            return res.serverError();
+        }
+        
         if(! _.isEmpty(foundChat.blocked) ){
             return res.forbidden({"errors": [{"error":"You are not allowed to enter this chatroom"}]});
         }

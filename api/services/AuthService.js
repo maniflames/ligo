@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
 
@@ -8,6 +8,15 @@ module.exports = {
     let valid = true;
     let passMatch =  true;
     let errors = [];
+
+    let notContains = ['<', '>', '\'', '\\', '/', '(', ')', '"', '}', '{', '[', ']', "*"];
+
+    notContains.map(function(char){
+        if(req.body.username.indexOf(char) != -1){
+            valid = false;
+            errors.push({error: 'You can\'t use ' + char + ' in your username'});
+        }
+    })
 
     if(req.body.username == undefined || req.body.username == ''){
         valid = false;

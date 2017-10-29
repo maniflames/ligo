@@ -1,19 +1,24 @@
 extends page-layout.pug 
 block content
+    include template-parts/header.pug
     if errors
       each e in errors
         p #{e.error}
-  
-    h1.
-      Log in
+          
+    div.login-signup-form
+      h3.
+        Log in
 
-    form(method='POST')
-      +formField('text', 'username', 'username')
-      +formField('password', 'password', 'password')
-      +formField('hidden', '_csrf')(value= _csrf)
-      +formField('submit', 'login')(class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
-      
+      form(method='POST', class="col s12")
+        div.input-field.col.s6
+          label(for='username') username
+          +formField('text', 'username')
+        div.input-field.col.s6
+          label(for='password') password
+          +formField('password', 'password')
+        +formField('hidden', '_csrf')(value= _csrf)
+        +formField('submit', 'login')(class="waves-effect waves-light btn", id="submit", value="login")
 
-    div
-      p not a member yet? 
-        +a( sails.getUrlFor('UserController.register'), 'sign up')
+      div.login-signup-other-option
+        p not a member yet? 
+          +a( sails.getUrlFor('UserController.register'), 'sign up')
